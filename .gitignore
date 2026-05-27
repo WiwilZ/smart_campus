@@ -1,0 +1,97 @@
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtual env
+venv/
+.env/
+.venv/
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+
+# logs
+*.log
+
+# sqlite
+db.sqlite3
+
+# environment variables
+.env
+.env.*
+
+# =========================
+# Django
+# =========================
+media/
+staticfiles/
+
+# migrations (可选)
+# */migrations/*
+# !*/migrations/__init__.py
+
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# build
+dist/
+build/
+
+# cache
+.cache/
+
+# =========================
+# Frontend
+# =========================
+coverage/
+
+# vite
+.vite/
+
+# =========================
+# Uploads
+# =========================
+uploads/
+
+# =========================
+# Temporary files
+# =========================
+*.swp
+*.swo
+*~
+
+# =========================
+# Secrets
+# =========================
+*.pem
+*.key
+*.crt
+
+# =========================
+# Git
+# =========================
+.git-credentials

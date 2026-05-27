@@ -1,5 +1,6 @@
 ## 启动
 后端：
+
 cd backend
 
 conda activate vision
@@ -7,6 +8,7 @@ conda activate vision
 python main.py
 
 前端：
+
 在frontend/apps/web-naive中开发
 
 cd frontend
@@ -14,6 +16,10 @@ cd frontend
 pnpm run dev 
 
 选择robot/web-naive
+
+vibe coding：
+
+注意加上“/mnt/SSD/miniforge3/envs/vision/bin/python” “在frontend/apps/web-naive中开发”
 
 ## TODO
 1. 标题改为智慧校园
