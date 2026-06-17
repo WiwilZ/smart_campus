@@ -95,3 +95,4 @@ uploads/
 # Git
 # =========================
 .git-credentials
+.worktrees/
