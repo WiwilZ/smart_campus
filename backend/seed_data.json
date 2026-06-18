@@ -1,0 +1,693 @@
+{
+  "alerts": [
+    {
+      "id": "alert-001",
+      "time": "2026-06-12 12:35:20",
+      "location": "学生宿舍",
+      "image": "http://127.0.0.1:8080/images/alert_fire_lane.jpg",
+      "description": "消防通道堵塞",
+      "level": "high",
+      "title": "消防通道堵塞"
+    },
+    {
+      "id": "alert-002",
+      "time": "2026-06-18 10:54:51",
+      "location": "停车场",
+      "image": "http://127.0.0.1:8080/images/alert_parking.jpg",
+      "description": "不规范停车",
+      "level": "medium",
+      "title": "不规范停车"
+    },
+    {
+      "id": "alert-003",
+      "time": "2026-06-12 11:35:53",
+      "location": "听荷池",
+      "image": "http://127.0.0.1:8080/images/alert_railing.jpg",
+      "description": "栏杆损坏",
+      "level": "high",
+      "title": "栏杆损坏"
+    },
+    {
+      "id": "alert-004",
+      "time": "2026-06-02 17:23:21",
+      "location": "操场",
+      "image": "http://127.0.0.1:8080/images/alert_littering.jpg",
+      "description": "乱丢垃圾",
+      "level": "low",
+      "title": "乱丢垃圾"
+    }
+  ],
+  "batches": [
+    {
+      "id": "batch-022",
+      "batchNo": "22",
+      "type": "自动巡检",
+      "route": "学府广场 - 体育运动中心 - 文理图书馆",
+      "pointCount": 3,
+      "startedAt": "2026-06-18 14:59",
+      "finishedAt": "2026-06-18 15:46",
+      "status": "completed"
+    },
+    {
+      "id": "batch-021",
+      "batchNo": "21",
+      "type": "自动巡检",
+      "route": "听荷池 - 东三食堂",
+      "pointCount": 2,
+      "startedAt": "2026-06-18 13:54",
+      "finishedAt": "",
+      "status": "running"
+    },
+    {
+      "id": "batch-020",
+      "batchNo": "20",
+      "type": "手动巡检",
+      "route": "北园学生宿舍消防路线",
+      "pointCount": 1,
+      "startedAt": "2026-06-18 12:54",
+      "finishedAt": "2026-06-18 13:36",
+      "status": "completed"
+    },
+    {
+      "id": "batch-019",
+      "batchNo": "19",
+      "type": "故障巡检",
+      "route": "东区停车场视频链路恢复路线",
+      "pointCount": 1,
+      "startedAt": "2026-06-18 10:54",
+      "finishedAt": "",
+      "status": "unfinished"
+    }
+  ],
+  "commands": [
+    {
+      "id": "cmd-001",
+      "command": "开始录像",
+      "target": "学府广场巡检机器人",
+      "operator": "赵强",
+      "status": "success",
+      "createdAt": "2026-06-02 07:42:59",
+      "result": "录像任务已启动。"
+    },
+    {
+      "id": "cmd-002",
+      "command": "云台左转",
+      "target": "体育运动中心巡检机器人",
+      "operator": "陈敏",
+      "status": "success",
+      "createdAt": "2026-06-05 02:18:37",
+      "result": "云台已左转 15°。"
+    },
+    {
+      "id": "cmd-003",
+      "command": "机械臂初始化",
+      "target": "东三食堂后勤巡检机器人",
+      "operator": "赵强",
+      "status": "success",
+      "createdAt": "2026-06-09 15:41:46",
+      "result": "机械臂已归零。"
+    },
+    {
+      "id": "cmd-004",
+      "command": "拍摄照片",
+      "target": "东区停车场巡检机器人",
+      "operator": "刘洋",
+      "status": "failed",
+      "createdAt": "2026-06-06 16:47:37",
+      "result": "设备离线，命令未执行。"
+    }
+  ],
+  "inspectionRows": [
+    {
+      "id": "data-001",
+      "algorithm": "人流密度 - 聚集检测算法",
+      "taskNo": "自动巡检 - 22",
+      "pointName": "学府广场",
+      "value": "126 人/小时",
+      "time": "2026-06-18 15:52",
+      "detail": "广场人流处于正常范围，未发现异常聚集。"
+    },
+    {
+      "id": "data-002",
+      "algorithm": "通道占用 - 入口拥堵识别",
+      "taskNo": "自动巡检 - 22",
+      "pointName": "体育运动中心",
+      "value": "拥堵指数 72%",
+      "time": "2026-06-18 15:49",
+      "detail": "训练时段主入口人流较高，建议加强现场疏导。"
+    },
+    {
+      "id": "data-003",
+      "algorithm": "温湿度 - 阅览区环境检测",
+      "taskNo": "自动巡检 - 21",
+      "pointName": "文理图书馆",
+      "value": "24.6 ℃ / 51%",
+      "time": "2026-06-18 15:42",
+      "detail": "阅览区温湿度舒适，消防通道无遮挡。"
+    },
+    {
+      "id": "data-004",
+      "algorithm": "水域安全 - 水位护栏检测",
+      "taskNo": "自动巡检 - 20",
+      "pointName": "听荷池",
+      "value": "水位 0.82 m",
+      "time": "2026-06-18 15:36",
+      "detail": "水位正常，北侧补光设备需夜间复核。"
+    },
+    {
+      "id": "data-005",
+      "algorithm": "燃气 - 后厨安全检测",
+      "taskNo": "自动巡检 - 19",
+      "pointName": "东三食堂",
+      "value": "0 ppm",
+      "time": "2026-06-18 15:29",
+      "detail": "燃气报警器与排烟系统状态正常。"
+    },
+    {
+      "id": "data-006",
+      "algorithm": "消防通道 - 占道检测",
+      "taskNo": "手动巡检 - 18",
+      "pointName": "北园学生宿舍",
+      "value": "无遮挡",
+      "time": "2026-06-18 15:18",
+      "detail": "宿舍消防通道无遮挡，楼栋照明正常。"
+    },
+    {
+      "id": "data-007",
+      "algorithm": "视频链路 - 终端在线检测",
+      "taskNo": "故障巡检 - 17",
+      "pointName": "东区停车场",
+      "value": "离线",
+      "time": "2026-06-18 14:54",
+      "detail": "停车场视频终端离线，需检查网络网关与供电。"
+    }
+  ],
+  "inspectors": [
+    {
+      "id": "insp-001",
+      "name": "张敏",
+      "phone": "18800010001",
+      "shift": "早班",
+      "status": "on_duty",
+      "title": "值班主管"
+    },
+    {
+      "id": "insp-002",
+      "name": "李波",
+      "phone": "18800010002",
+      "shift": "中班",
+      "status": "on_duty",
+      "title": "巡检工程师"
+    },
+    {
+      "id": "insp-003",
+      "name": "王雪",
+      "phone": "18800010003",
+      "shift": "夜班",
+      "status": "resting",
+      "title": "巡检工程师"
+    },
+    {
+      "id": "insp-004",
+      "name": "陈晨",
+      "phone": "18800010004",
+      "shift": "机动",
+      "status": "support",
+      "title": "设备专员"
+    }
+  ],
+  "points": [
+    {
+      "id": "pt-001",
+      "code": "A-01",
+      "name": "学府广场",
+      "area": "校园公共空间",
+      "deviceName": "学府广场巡检机器人",
+      "deviceType": "广场安防巡检点",
+      "status": "normal",
+      "riskLevel": "medium",
+      "inspectorName": "张敏",
+      "lastInspectionTime": "2026-06-18 15:38",
+      "description": "重点关注人流密度、广场照明、公共广播与异常聚集。",
+      "coordinates": "116.399872, 39.916985",
+      "creatorName": "刘洋",
+      "createTime": "2026-06-17 00:13:11",
+      "modifierName": "黄秀英",
+      "modifyTime": "2026-06-11 15:44:19"
+    },
+    {
+      "id": "pt-002",
+      "code": "A-02",
+      "name": "体育运动中心",
+      "area": "体育运动中心",
+      "deviceName": "体育运动中心巡检机器人",
+      "deviceType": "场馆安防巡检点",
+      "status": "warning",
+      "riskLevel": "high",
+      "inspectorName": "李波",
+      "lastInspectionTime": "2026-06-18 14:46",
+      "description": "晚间训练时段人流较高，需复核入口通道、消防门与视频链路。",
+      "coordinates": "116.398246, 39.910636",
+      "creatorName": "黄秀英",
+      "createTime": "2026-06-10 18:29:13",
+      "modifierName": "赵强",
+      "modifyTime": "2026-06-07 06:54:21"
+    },
+    {
+      "id": "pt-003",
+      "code": "A-03",
+      "name": "文理图书馆",
+      "area": "文理图书馆",
+      "deviceName": "文理图书馆巡检机器人",
+      "deviceType": "室内巡检点",
+      "status": "normal",
+      "riskLevel": "high",
+      "inspectorName": "王雪",
+      "lastInspectionTime": "2026-06-18 15:20",
+      "description": "关注阅览区温湿度、门禁闸机、人流密度与消防通道。",
+      "coordinates": "116.410353, 39.907429",
+      "creatorName": "李娜",
+      "createTime": "2026-06-02 17:41:27",
+      "modifierName": "王伟",
+      "modifyTime": "2026-06-04 21:55:01"
+    },
+    {
+      "id": "pt-004",
+      "code": "A-04",
+      "name": "听荷池",
+      "area": "景观水域",
+      "deviceName": "听荷池水域巡检终端",
+      "deviceType": "水域环境巡检点",
+      "status": "warning",
+      "riskLevel": "medium",
+      "inspectorName": "陈晨",
+      "lastInspectionTime": "2026-06-18 13:44",
+      "description": "水位与护栏状态需要持续关注，夜间补光设备需复核。",
+      "coordinates": "116.413569, 39.923917",
+      "creatorName": "赵强",
+      "createTime": "2026-06-12 05:29:13",
+      "modifierName": "陈敏",
+      "modifyTime": "2026-06-12 18:15:35"
+    },
+    {
+      "id": "pt-005",
+      "code": "A-05",
+      "name": "东三食堂",
+      "area": "后勤餐饮",
+      "deviceName": "东三食堂后勤巡检机器人",
+      "deviceType": "餐饮后勤巡检点",
+      "status": "normal",
+      "riskLevel": "medium",
+      "inspectorName": "张敏",
+      "lastInspectionTime": "2026-06-18 15:06",
+      "description": "检查燃气报警、后厨温度、排烟系统与后勤通道占用。",
+      "coordinates": "116.394727, 39.918734",
+      "creatorName": "王伟",
+      "createTime": "2026-06-03 15:01:16",
+      "modifierName": "李伟",
+      "modifyTime": "2026-06-04 23:49:50"
+    },
+    {
+      "id": "pt-006",
+      "code": "A-06",
+      "name": "北园学生宿舍",
+      "area": "学生宿舍",
+      "deviceName": "北园学生宿舍消防巡检机器人",
+      "deviceType": "宿舍区巡检点",
+      "status": "normal",
+      "riskLevel": "low",
+      "inspectorName": "李波",
+      "lastInspectionTime": "2026-06-18 14:18",
+      "description": "重点关注消防通道、电瓶车停放、楼栋照明与夜间噪声。",
+      "coordinates": "116.412363, 39.917936",
+      "creatorName": "王芳",
+      "createTime": "2026-06-12 16:49:02",
+      "modifierName": "杨静",
+      "modifyTime": "2026-06-08 07:12:47"
+    },
+    {
+      "id": "pt-007",
+      "code": "A-07",
+      "name": "东区停车场",
+      "area": "交通停车",
+      "deviceName": "东区停车场巡检机器人",
+      "deviceType": "停车场巡检点",
+      "status": "offline",
+      "riskLevel": "high",
+      "inspectorName": "陈晨",
+      "lastInspectionTime": "2026-06-18 11:34",
+      "description": "停车场视频终端离线，需检查充电桩、车道占用与视频网关。",
+      "coordinates": "116.404534, 39.907835",
+      "creatorName": "杨静",
+      "createTime": "2026-06-05 08:36:17",
+      "modifierName": "王芳",
+      "modifyTime": "2026-06-15 19:02:36"
+    }
+  ],
+  "realtimeRows": [
+    {
+      "id": "rt-001",
+      "pointName": "学府广场",
+      "metric": "人流密度",
+      "value": "126 人/小时",
+      "status": "normal",
+      "time": "2026-06-18 15:53"
+    },
+    {
+      "id": "rt-002",
+      "pointName": "体育运动中心",
+      "metric": "拥堵指数",
+      "value": "72%",
+      "status": "warning",
+      "time": "2026-06-18 15:53"
+    },
+    {
+      "id": "rt-003",
+      "pointName": "文理图书馆",
+      "metric": "阅览区温湿度",
+      "value": "24.6 ℃ / 51%",
+      "status": "normal",
+      "time": "2026-06-18 15:52"
+    },
+    {
+      "id": "rt-004",
+      "pointName": "听荷池",
+      "metric": "水位",
+      "value": "0.82 m",
+      "status": "warning",
+      "time": "2026-06-18 15:51"
+    },
+    {
+      "id": "rt-005",
+      "pointName": "东三食堂",
+      "metric": "燃气浓度",
+      "value": "0 ppm",
+      "status": "normal",
+      "time": "2026-06-18 15:50"
+    },
+    {
+      "id": "rt-006",
+      "pointName": "北园学生宿舍",
+      "metric": "消防通道",
+      "value": "无遮挡",
+      "status": "normal",
+      "time": "2026-06-18 15:49"
+    },
+    {
+      "id": "rt-007",
+      "pointName": "东区停车场",
+      "metric": "视频终端",
+      "value": "离线",
+      "status": "offline",
+      "time": "2026-06-18 15:48"
+    }
+  ],
+  "records": [
+    {
+      "id": "rec-001",
+      "taskId": "task-005",
+      "taskTitle": "东三食堂后勤安全巡检",
+      "pointName": "东三食堂",
+      "inspectorName": "张敏",
+      "result": "normal",
+      "finishedAt": "2026-06-18 13:29",
+      "summary": "燃气报警器、排烟系统和后勤通道均正常，未发现占道。"
+    },
+    {
+      "id": "rec-002",
+      "taskId": "task-001",
+      "taskTitle": "学府广场人流与照明巡检",
+      "pointName": "学府广场",
+      "inspectorName": "张敏",
+      "result": "normal",
+      "finishedAt": "2026-06-17 15:49",
+      "summary": "广场人流平稳，照明、广播和安防摄像头状态正常。"
+    },
+    {
+      "id": "rec-003",
+      "taskId": "task-002",
+      "taskTitle": "体育运动中心入口通道复核",
+      "pointName": "体育运动中心",
+      "inspectorName": "李波",
+      "result": "warning",
+      "finishedAt": "2026-06-18 11:52",
+      "summary": "主入口训练时段短时拥堵，应急照明正常，建议晚间复核。"
+    },
+    {
+      "id": "rec-004",
+      "taskId": "task-003",
+      "taskTitle": "文理图书馆阅览区环境巡检",
+      "pointName": "文理图书馆",
+      "inspectorName": "王雪",
+      "result": "normal",
+      "finishedAt": "2026-06-18 12:29",
+      "summary": "阅览区温湿度、人流密度、门禁闸机与消防通道均正常。"
+    },
+    {
+      "id": "rec-005",
+      "taskId": "task-006",
+      "taskTitle": "北园学生宿舍消防通道复核",
+      "pointName": "北园学生宿舍",
+      "inspectorName": "李波",
+      "result": "normal",
+      "finishedAt": "2026-06-18 14:29",
+      "summary": "消防通道无遮挡，电瓶车停放规范，楼栋照明正常。"
+    }
+  ],
+  "schedules": [
+    {
+      "id": "sch-001",
+      "taskId": "task-002",
+      "taskTitle": "体育运动中心入口通道复核",
+      "inspectorId": "insp-002",
+      "inspectorName": "李波",
+      "executionTime": "2026-06-18 16:54",
+      "shift": "afternoon",
+      "note": "结合晚间训练高峰复核入口拥堵与消防门状态",
+      "reminderMinutes": 20,
+      "createdAt": "2026-06-18 15:24"
+    },
+    {
+      "id": "sch-002",
+      "taskId": "task-004",
+      "taskTitle": "听荷池水域安全巡检",
+      "inspectorId": "insp-004",
+      "inspectorName": "陈晨",
+      "executionTime": "2026-06-18 18:54",
+      "shift": "evening",
+      "note": "夜间补光开启前复核水位、护栏和警示牌",
+      "reminderMinutes": 15,
+      "createdAt": "2026-06-18 15:36"
+    },
+    {
+      "id": "sch-003",
+      "taskId": "task-007",
+      "taskTitle": "东区停车场视频链路恢复",
+      "inspectorId": "insp-004",
+      "inspectorName": "陈晨",
+      "executionTime": "2026-06-18 19:54",
+      "shift": "evening",
+      "note": "优先检查停车场网关、视频终端和充电桩状态",
+      "reminderMinutes": 10,
+      "createdAt": "2026-06-18 15:42"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "学府广场人流与照明巡检",
+      "pointId": "pt-001",
+      "pointName": "学府广场",
+      "inspectorId": "insp-001",
+      "inspectorName": "张敏",
+      "frequency": "每日 08:00 / 20:00",
+      "priority": "medium",
+      "status": "completed",
+      "plannedStart": "2026-06-18 15:44",
+      "plannedEnd": "2026-06-18 16:14",
+      "lastExecutionTime": "2026-06-17 15:49",
+      "description": "核对广场人流密度、公共广播、照明与异常聚集情况。",
+      "checklist": [
+        "检查广场人流密度",
+        "确认公共照明状态",
+        "核对广播与安防摄像头在线情况"
+      ],
+      "creatorName": "陈敏",
+      "createTime": "2026-06-05 07:52:25",
+      "modifierName": "黄秀英",
+      "modifyTime": "2026-06-06 19:09:55",
+      "startTime": "2026-06-16 12:24:13",
+      "endTime": "2026-06-18 16:30:00",
+      "point": "东三食堂, 文理图书馆, 学府广场",
+      "robot": "Robot-03"
+    },
+    {
+      "id": "task-002",
+      "title": "体育运动中心入口通道复核",
+      "pointId": "pt-002",
+      "pointName": "体育运动中心",
+      "inspectorId": "insp-002",
+      "inspectorName": "李波",
+      "frequency": "每日 3 次",
+      "priority": "high",
+      "status": "completed",
+      "plannedStart": "2026-06-18 16:54",
+      "plannedEnd": "2026-06-18 17:34",
+      "lastExecutionTime": "2026-06-18 11:52",
+      "description": "复核场馆入口拥堵、消防门开启、视频链路与应急照明。",
+      "checklist": [
+        "检查入口人流拥堵",
+        "确认消防门与疏散标识",
+        "复核视频链路在线状态"
+      ],
+      "creatorName": "王芳",
+      "createTime": "2026-06-11 03:15:51",
+      "modifierName": "王伟",
+      "modifyTime": "2026-06-10 00:57:47",
+      "startTime": "2026-06-06 13:36:25",
+      "endTime": "2026-06-18 16:30:00",
+      "point": "体育运动中心, 听荷池",
+      "robot": "Robot-02"
+    },
+    {
+      "id": "task-003",
+      "title": "文理图书馆阅览区环境巡检",
+      "pointId": "pt-003",
+      "pointName": "文理图书馆",
+      "inspectorId": "insp-003",
+      "inspectorName": "王雪",
+      "frequency": "每日 4 次",
+      "priority": "high",
+      "status": "completed",
+      "plannedStart": "2026-06-18 18:24",
+      "plannedEnd": "2026-06-18 18:59",
+      "lastExecutionTime": "2026-06-18 12:29",
+      "description": "检查阅览区温湿度、人流密度、门禁闸机与消防通道。",
+      "checklist": [
+        "读取温湿度数值",
+        "检查阅览区人流密度",
+        "确认消防通道无遮挡"
+      ],
+      "creatorName": "陈敏",
+      "createTime": "2026-06-12 13:36:39",
+      "modifierName": "李伟",
+      "modifyTime": "2026-06-08 14:00:35",
+      "startTime": "2026-06-10 23:12:24",
+      "endTime": "2026-06-18 16:30:00",
+      "point": "东三食堂, 东区停车场, 北园学生宿舍",
+      "robot": "Robot-03"
+    },
+    {
+      "id": "task-004",
+      "title": "听荷池水域安全巡检",
+      "pointId": "pt-004",
+      "pointName": "听荷池",
+      "inspectorId": "insp-004",
+      "inspectorName": "陈晨",
+      "frequency": "每日 2 次",
+      "priority": "medium",
+      "status": "completed",
+      "plannedStart": "2026-06-18 18:54",
+      "plannedEnd": "2026-06-18 19:29",
+      "lastExecutionTime": "2026-06-18 09:44",
+      "description": "巡检水位、护栏完整性、警示牌与夜间补光状态。",
+      "checklist": [
+        "读取水位标尺",
+        "检查护栏与警示牌",
+        "确认夜间补光设备"
+      ],
+      "creatorName": "刘洋",
+      "createTime": "2026-06-04 16:32:27",
+      "modifierName": "李伟",
+      "modifyTime": "2026-06-07 04:06:04",
+      "startTime": "2026-06-02 04:43:00",
+      "endTime": "2026-06-05 13:09:10",
+      "point": "听荷池, 东三食堂",
+      "robot": "Robot-03"
+    },
+    {
+      "id": "task-005",
+      "title": "东三食堂后勤安全巡检",
+      "pointId": "pt-005",
+      "pointName": "东三食堂",
+      "inspectorId": "insp-001",
+      "inspectorName": "张敏",
+      "frequency": "每日 10:00 / 15:00",
+      "priority": "medium",
+      "status": "pending",
+      "plannedStart": "2026-06-18 12:54",
+      "plannedEnd": "2026-06-18 13:29",
+      "lastExecutionTime": "2026-06-18 13:29",
+      "description": "确认燃气报警器、排烟系统、后厨温度与通道占用。",
+      "checklist": [
+        "检查燃气报警器",
+        "读取后厨温度",
+        "确认排烟系统和后勤通道"
+      ],
+      "creatorName": "王伟",
+      "createTime": "2026-06-04 08:44:52",
+      "modifierName": "杨静",
+      "modifyTime": "2026-06-18 09:52:51",
+      "startTime": "2026-06-10 20:56:03",
+      "endTime": "2026-06-01 12:59:02",
+      "point": "东三食堂, 体育运动中心, 学府广场",
+      "robot": "Robot-02"
+    },
+    {
+      "id": "task-006",
+      "title": "北园学生宿舍消防通道复核",
+      "pointId": "pt-006",
+      "pointName": "北园学生宿舍",
+      "inspectorId": "insp-002",
+      "inspectorName": "李波",
+      "frequency": "每日 2 次",
+      "priority": "low",
+      "status": "pending",
+      "plannedStart": "2026-06-18 13:54",
+      "plannedEnd": "2026-06-18 14:29",
+      "lastExecutionTime": "2026-06-18 14:29",
+      "description": "检查宿舍消防通道、电瓶车停放、楼栋照明与夜间噪声。",
+      "checklist": [
+        "检查消防通道占用",
+        "检查电瓶车停放",
+        "复核楼栋照明与噪声"
+      ],
+      "creatorName": "王芳",
+      "createTime": "2026-06-09 21:43:43",
+      "modifierName": "赵强",
+      "modifyTime": "2026-06-03 14:16:04",
+      "startTime": "2026-06-14 21:30:39",
+      "endTime": "",
+      "point": "听荷池, 东区停车场",
+      "robot": "Robot-02"
+    },
+    {
+      "id": "task-007",
+      "title": "东区停车场视频链路恢复",
+      "pointId": "pt-007",
+      "pointName": "东区停车场",
+      "inspectorId": "insp-004",
+      "inspectorName": "陈晨",
+      "frequency": "故障触发",
+      "priority": "high",
+      "status": "error",
+      "plannedStart": "2026-06-18 19:54",
+      "plannedEnd": "2026-06-18 20:39",
+      "lastExecutionTime": "2026-06-17 14:34",
+      "description": "排查停车场视频终端离线、车道占用、充电桩与网络网关状态。",
+      "checklist": [
+        "检查视频终端网络",
+        "检查车道与充电桩状态",
+        "远程重启停车场网关"
+      ],
+      "creatorName": "张伟",
+      "createTime": "2026-06-06 09:40:50",
+      "modifierName": "刘洋",
+      "modifyTime": "2026-06-16 00:47:23",
+      "startTime": "2026-06-07 06:12:20",
+      "endTime": "",
+      "point": "文理图书馆, 体育运动中心",
+      "robot": "Robot-01"
+    }
+  ]
+}

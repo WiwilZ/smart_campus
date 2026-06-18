@@ -12,7 +12,7 @@ export const overridesPreferences = defineOverridesPreferences({
     defaultHomePath: '/dashboard',
     enableCheckUpdates: false,
     enablePreferences: false,
-    name: '巡检机器人',
+    name: '智慧校园',
   },
   copyright: {
     companyName: 'scu-201',

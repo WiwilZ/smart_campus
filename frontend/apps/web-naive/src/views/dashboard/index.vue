@@ -14,40 +14,7 @@ const router = useRouter();
 const loading = ref(true);
 const dashboard = ref<InspectionDashboardData | null>(null);
 
-const alertTypeMap: Record<InspectionAlert['level'], 'error' | 'success' | 'warning'> = {
-  high: 'error',
-  low: 'success',
-  medium: 'warning',
-};
-const alertLabelMap: Record<InspectionAlert['level'], string> = {
-  high: '紧急',
-  low: '提示',
-  medium: '关注',
-};
-const priorityLabelMap: Record<InspectionTask['priority'], string> = {
-  high: '高',
-  low: '低',
-  medium: '中',
-};
-const priorityTypeMap: Record<InspectionTask['priority'], 'error' | 'info' | 'warning'> = {
-  high: 'error',
-  low: 'info',
-  medium: 'warning',
-};
-const statusLabelMap: Record<InspectionTask['status'], string> = {
-  completed: '已完成',
-  in_progress: '执行中',
-  paused: '已暂停',
-  pending: '待处理',
-  scheduled: '已排班',
-};
-const statusTypeMap: Record<InspectionTask['status'], 'default' | 'error' | 'info' | 'success' | 'warning'> = {
-  completed: 'success',
-  in_progress: 'warning',
-  paused: 'default',
-  pending: 'info',
-  scheduled: 'success',
-};
+
 const robotInfo = [
   { label: '剩余电量', value: '86%' },
   { label: '内存占用', value: '12 GB / 30GB' },
@@ -135,14 +102,7 @@ const summaryCards = computed(() => {
   ];
 });
 
-function progressPercent(value: number) {
-  const total = dashboard.value?.summary.totalPoints || 1;
-  return Math.round((value / total) * 100);
-}
 
-function goTo(path: string) {
-  router.push(path).catch((error) => console.error('navigation failed', error));
-}
 
 async function loadDashboard() {
   loading.value = true;
@@ -214,122 +174,6 @@ onMounted(() => {
         </NCard>
       </div>
 
-      <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <NCard :bordered="false" class="shadow-sm xl:col-span-1" title="点位态势">
-          <div v-if="loading" class="space-y-3">
-            <NSkeleton :repeat="3" text />
-          </div>
-          <div v-else class="space-y-4">
-            <div
-              v-for="item in dashboard?.statusDistribution ?? []"
-              :key="item.label"
-              class="rounded-xl bg-slate-50 p-4"
-            >
-              <div class="mb-2 flex items-center justify-between text-sm text-slate-600">
-                <span>{{ item.label }}</span>
-                <span>{{ item.value }}</span>
-              </div>
-              <NProgress
-                :color="item.type === 'success' ? '#18a058' : item.type === 'warning' ? '#f0a020' : '#d03050'"
-                :percentage="progressPercent(item.value)"
-                :show-indicator="false"
-                processing
-                type="line"
-              />
-            </div>
-            <div class="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
-              当前离线点位 {{ dashboard?.summary.offlinePoints ?? 0 }} 个，预警点位
-              {{ dashboard?.summary.warningPoints ?? 0 }} 个。
-            </div>
-          </div>
-        </NCard>
-
-        <NCard :bordered="false" class="shadow-sm xl:col-span-2" title="待执行任务">
-          <template #header-extra>
-            <NButton text type="primary" @click="goTo('/inspection/tasks')">查看全部</NButton>
-          </template>
-          <div v-if="loading" class="space-y-3">
-            <NSkeleton :repeat="4" text />
-          </div>
-          <div v-else-if="dashboard?.upcomingTasks.length" class="space-y-3">
-            <div
-              v-for="task in dashboard?.upcomingTasks"
-              :key="task.id"
-              class="flex flex-col gap-3 rounded-xl border border-slate-200 p-4 transition hover:border-primary md:flex-row md:items-center md:justify-between"
-            >
-              <div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <div class="text-base font-medium text-slate-900">{{ task.title }}</div>
-                  <NTag :type="priorityTypeMap[task.priority]" size="small">
-                    {{ priorityLabelMap[task.priority] }}优先级
-                  </NTag>
-                  <NTag :type="statusTypeMap[task.status]" size="small">
-                    {{ statusLabelMap[task.status] }}
-                  </NTag>
-                </div>
-                <div class="mt-2 text-sm text-slate-500">
-                  {{ task.pointName }} · {{ task.inspectorName }} · {{ task.plannedStart }}
-                </div>
-              </div>
-              <NButton ghost type="primary" @click="goTo(`/inspection/tasks/${task.id}`)">
-                编辑任务
-              </NButton>
-            </div>
-          </div>
-          <NEmpty v-else description="暂无待执行任务" />
-        </NCard>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <NCard :bordered="false" class="shadow-sm" title="最新巡检记录">
-          <div v-if="loading" class="space-y-3">
-            <NSkeleton :repeat="4" text />
-          </div>
-          <div v-else-if="dashboard?.recentRecords.length" class="space-y-3">
-            <div
-              v-for="record in dashboard?.recentRecords"
-              :key="record.id"
-              class="rounded-xl bg-slate-50 p-4"
-            >
-              <div class="flex items-center justify-between gap-3">
-                <div class="font-medium text-slate-900">{{ record.taskTitle }}</div>
-                <div class="text-xs text-slate-400">{{ record.finishedAt }}</div>
-              </div>
-              <div class="mt-1 text-sm text-slate-500">
-                {{ record.pointName }} · {{ record.inspectorName }}
-              </div>
-              <div class="mt-2 text-sm text-slate-600">{{ record.summary }}</div>
-            </div>
-          </div>
-          <NEmpty v-else description="暂无巡检记录" />
-        </NCard>
-
-        <NCard :bordered="false" class="shadow-sm" title="告警与关注事项">
-          <template #header-extra>
-            <NButton text type="primary" @click="goTo('/inspection/alerts')">查看告警</NButton>
-          </template>
-          <div v-if="loading" class="space-y-3">
-            <NSkeleton :repeat="4" text />
-          </div>
-          <div v-else-if="dashboard?.alerts.length" class="space-y-3">
-            <div
-              v-for="alert in dashboard?.alerts"
-              :key="alert.id"
-              class="rounded-xl border border-slate-200 p-4"
-            >
-              <div class="flex items-center justify-between gap-2">
-                <div class="font-medium text-slate-900">{{ alert.title }}</div>
-                <NTag :type="alertTypeMap[alert.level]" size="small">
-                  {{ alertLabelMap[alert.level] }}
-                </NTag>
-              </div>
-              <div class="mt-2 text-sm text-slate-600">{{ alert.content }}</div>
-              <div class="mt-2 text-xs text-slate-400">{{ alert.createdAt }}</div>
-            </div>
-          </div>
-          <NEmpty v-else description="暂无告警信息" />
-        </NCard>
-      </div>
     </div>
   </Page>
 </template>

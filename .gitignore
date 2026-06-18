@@ -95,4 +95,5 @@ uploads/
 # Git
 # =========================
 .git-credentials
-.worktrees/
+.worktrees/smart_campus.db
+update_tasks.py

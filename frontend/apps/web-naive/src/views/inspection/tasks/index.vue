@@ -5,6 +5,7 @@ import type { InspectionMetaData, InspectionTask, InspectionTasksResponse } from
 
 import { computed, h, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import TaskModal from './components/TaskModal.vue';
 
 import { Page } from '@vben/common-ui';
 
@@ -19,6 +20,7 @@ import {
   NModal,
   NSelect,
   NTag,
+  NPopconfirm,
 } from 'naive-ui';
 
 import { message } from '#/adapter/naive';
@@ -37,11 +39,47 @@ const summary = ref<InspectionTasksResponse['summary']>({
   pending: 0,
 });
 const currentTask = ref<InspectionTask | null>(null);
+
+const showModal = ref(false);
+const editingTask = ref<InspectionTask | null>(null);
+
+const handleAdd = () => {
+  editingTask.value = null;
+  showModal.value = true;
+};
+
+import { createInspectionTask, updateInspectionTaskDetail, deleteInspectionTask } from '#/api/inspection';
+
+const handleDelete = async (row: InspectionTask) => {
+  try {
+    await deleteInspectionTask(row.id);
+    message.success('删除成功');
+    loadTasks();
+  } catch (error) {
+    message.error('删除失败');
+  }
+};
+
+const handleSaveTask = async (data: Partial<InspectionTask>) => {
+  try {
+    if (editingTask.value) {
+      await updateInspectionTaskDetail(editingTask.value.id, data);
+      message.success('修改成功');
+    } else {
+      await createInspectionTask(data);
+      message.success('新增成功');
+    }
+    loadTasks();
+  } catch (error) {
+    message.error('操作失败');
+  }
+};
 const filters = reactive({
-  inspectorId: null as null | string,
-  keyword: '',
-  priority: null as null | string,
+  name: '',
+  point: '',
+  robot: '',
   status: null as null | string,
+  description: '',
 });
 const scheduleForm = reactive({
   executionTime: '',
@@ -63,99 +101,59 @@ const priorityTypeMap: Record<InspectionTask['priority'], 'error' | 'info' | 'wa
 };
 const statusLabelMap: Record<InspectionTask['status'], string> = {
   completed: '已完成',
+  error: '执行出错',
   in_progress: '执行中',
-  paused: '已暂停',
-  pending: '待处理',
-  scheduled: '已排班',
+  pending: '待执行',
 };
 const statusTypeMap: Record<InspectionTask['status'], 'default' | 'error' | 'info' | 'success' | 'warning'> = {
   completed: 'success',
+  error: 'error',
   in_progress: 'warning',
-  paused: 'default',
   pending: 'info',
-  scheduled: 'success',
 };
 
 const summaryCards = computed(() => [
-  { title: '待执行', value: summary.value.pending },
-  { title: '执行中', value: summary.value.inProgress },
-  { title: '已完成', value: summary.value.completed },
-  { title: '已暂停', value: summary.value.paused },
+  { title: '待执行', value: tasks.value.filter(t => t.status === 'pending').length },
+  { title: '执行中', value: tasks.value.filter(t => t.status === 'in_progress').length },
+  { title: '执行成功', value: tasks.value.filter(t => t.status === 'completed').length },
 ]);
 
 function openEdit(task: InspectionTask) {
-  router.push(`/inspection/tasks/${task.id}`).catch((error) => {
-    console.error('navigation failed', error);
-  });
-}
-
-function openSchedule(task: InspectionTask) {
-  currentTask.value = task;
-  scheduleForm.executionTime = task.plannedStart.replace(' ', 'T');
-  scheduleForm.inspectorId = task.inspectorId;
-  scheduleForm.note = '';
-  scheduleForm.reminderMinutes = 15;
-  scheduleForm.shift = 'morning';
-  scheduleVisible.value = true;
+  editingTask.value = task;
+  showModal.value = true;
 }
 
 const columns: DataTableColumns<InspectionTask> = [
-  {
-    key: 'title',
-    title: '任务名称',
-    minWidth: 180,
-  },
-  {
-    key: 'pointName',
-    title: '巡检点位',
-    width: 140,
-  },
-  {
-    key: 'inspectorName',
-    title: '巡检人员',
-    width: 100,
-  },
-  {
-    key: 'frequency',
-    title: '频次',
-    width: 140,
-  },
-  {
-    key: 'priority',
-    title: '优先级',
-    width: 100,
-    render: (row) =>
-      h(
-        NTag,
-        { bordered: false, type: priorityTypeMap[row.priority] },
-        { default: () => `${priorityLabelMap[row.priority]}优先` },
-      ),
-  },
+  { key: 'name', title: '名称', minWidth: 150 },
+  { key: 'point', title: '点位', minWidth: 200 },
+  { key: 'robot', title: '执行机器人', width: 140 },
   {
     key: 'status',
     title: '状态',
     width: 100,
-    render: (row) =>
-      h(
-        NTag,
-        { bordered: false, type: statusTypeMap[row.status] },
-        { default: () => statusLabelMap[row.status] },
-      ),
+    render: (row) => {
+      const statusMap: Record<string, { label: string, type: 'default' | 'error' | 'success' | 'warning' | 'info' }> = {
+        pending: { label: '待执行', type: 'info' },
+        in_progress: { label: '执行中', type: 'warning' },
+        completed: { label: '执行成功', type: 'success' },
+        error: { label: '执行失败', type: 'error' }
+      };
+      const mapObj = statusMap[row.status] || { label: row.status, type: 'default' };
+      return h(NTag, { type: mapObj.type, bordered: false }, { default: () => mapObj.label });
+    }
   },
-  {
-    key: 'plannedStart',
-    title: '计划开始',
-    width: 150,
-  },
-  {
-    key: 'plannedEnd',
-    title: '计划结束',
-    width: 150,
-  },
+  { key: 'startTime', title: '执行开始时间', width: 160 },
+  { key: 'endTime', title: '执行结束时间', width: 160 },
+  { key: 'description', title: '说明', minWidth: 150 },
+  { key: 'creatorName', title: '创建人', width: 100 },
+  { key: 'createTime', title: '创建时间', width: 160 },
+  { key: 'modifierName', title: '修改人', width: 100 },
+  { key: 'modifyTime', title: '修改时间', width: 160 },
   {
     key: 'actions',
     title: '操作',
     width: 180,
+    fixed: 'right',
     render: (row) =>
       h('div', { class: 'flex gap-2' }, [
         h(
@@ -169,15 +167,13 @@ const columns: DataTableColumns<InspectionTask> = [
           { default: () => '编辑' },
         ),
         h(
-          NButton,
+          NPopconfirm,
+          { onPositiveClick: () => handleDelete(row) },
           {
-            size: 'small',
-            type: 'warning',
-            ghost: true,
-            onClick: () => openSchedule(row),
-          },
-          { default: () => '排班' },
-        ),
+            default: () => '确认删除该任务吗？',
+            trigger: () => h(NButton, { size: 'small', type: 'error', ghost: true }, { default: () => '删除' })
+          }
+        )
       ]),
   },
 ];
@@ -187,10 +183,11 @@ async function loadTasks() {
   try {
     const [tasksResponse, metaResponse] = await Promise.all([
       getInspectionTasks({
-        inspectorId: filters.inspectorId || undefined,
-        keyword: filters.keyword || undefined,
-        priority: filters.priority || undefined,
+        name: filters.name || undefined,
+        point: filters.point || undefined,
+        robot: filters.robot || undefined,
         status: filters.status || undefined,
+        description: filters.description || undefined,
       }),
       meta.value ? Promise.resolve(meta.value) : getInspectionMeta(),
     ]);
@@ -203,36 +200,12 @@ async function loadTasks() {
 }
 
 function resetFilters() {
-  filters.inspectorId = null;
-  filters.keyword = '';
-  filters.priority = null;
+  filters.name = '';
+  filters.point = '';
+  filters.robot = '';
   filters.status = null;
+  filters.description = '';
   loadTasks();
-}
-
-async function submitSchedule() {
-  if (!currentTask.value) {
-    return;
-  }
-  if (!scheduleForm.executionTime) {
-    message.error('请选择执行时间');
-    return;
-  }
-  scheduling.value = true;
-  try {
-    await scheduleInspectionTask(currentTask.value.id, {
-      executionTime: scheduleForm.executionTime,
-      inspectorId: scheduleForm.inspectorId,
-      note: scheduleForm.note,
-      reminderMinutes: scheduleForm.reminderMinutes,
-      shift: scheduleForm.shift,
-    });
-    message.success('排班已更新');
-    scheduleVisible.value = false;
-    await loadTasks();
-  } finally {
-    scheduling.value = false;
-  }
 }
 
 onMounted(() => {
@@ -243,42 +216,28 @@ onMounted(() => {
 <template>
   <Page auto-content-height>
     <div class="space-y-4 p-1">
-      <NCard :bordered="false" class="shadow-sm" title="任务筛选">
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-5">
-          <NInput v-model:value="filters.keyword" clearable placeholder="搜索任务名称 / 点位 / ID" />
-          <NSelect
-            v-model:value="filters.status"
-            :options="meta?.statusOptions ?? []"
-            clearable
-            placeholder="筛选状态"
-          />
-          <NSelect
-            v-model:value="filters.priority"
-            :options="meta?.priorityOptions ?? []"
-            clearable
-            placeholder="筛选优先级"
-          />
-          <NSelect
-            v-model:value="filters.inspectorId"
-            :options="meta?.inspectors.map((item) => ({ label: item.name, value: item.id })) ?? []"
-            clearable
-            placeholder="筛选巡检人员"
-          />
-          <div class="flex gap-3">
+      <NCard :bordered="false" class="shadow-sm">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-wrap gap-4">
+            <NInput v-model:value="filters.name" clearable placeholder="名称" style="width: 140px" />
+            <NInput v-model:value="filters.point" clearable placeholder="点位" style="width: 140px" />
+            <NInput v-model:value="filters.robot" clearable placeholder="执行机器人" style="width: 140px" />
+            <NSelect v-model:value="filters.status" :options="meta?.statusOptions ?? []" clearable placeholder="状态" style="width: 140px" />
+            <NInput v-model:value="filters.description" clearable placeholder="说明" style="width: 140px" />
+          </div>
+          <div class="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
             <NButton type="primary" @click="loadTasks">查询</NButton>
             <NButton @click="resetFilters">重置</NButton>
           </div>
         </div>
       </NCard>
 
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <NCard v-for="item in summaryCards" :key="item.title" :bordered="false" class="shadow-sm">
-          <div class="text-sm text-slate-500">{{ item.title }}</div>
-          <div class="mt-3 text-3xl font-semibold text-slate-900">{{ item.value }}</div>
-        </NCard>
-      </div>
+
 
       <NCard :bordered="false" class="shadow-sm" title="巡检任务列表">
+        <template #header-extra>
+          <NButton type="primary" @click="handleAdd">新增</NButton>
+        </template>
         <NDataTable
           :columns="columns"
           :data="tasks"
@@ -290,45 +249,6 @@ onMounted(() => {
       </NCard>
     </div>
 
-    <NModal v-model:show="scheduleVisible" preset="card" style="width: 560px" title="任务排班">
-      <div class="space-y-4">
-        <div class="rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
-          <div class="font-medium text-slate-900">{{ currentTask?.title }}</div>
-          <div class="mt-1">{{ currentTask?.pointName }} · {{ currentTask?.inspectorName }}</div>
-        </div>
-        <NForm label-placement="top">
-          <NFormItem label="巡检人员">
-            <NSelect
-              v-model:value="scheduleForm.inspectorId"
-              :options="meta?.inspectors.map((item) => ({ label: item.name, value: item.id })) ?? []"
-            />
-          </NFormItem>
-          <NFormItem label="执行时间">
-            <input
-              v-model="scheduleForm.executionTime"
-              class="h-10 w-full rounded-md border border-slate-200 px-3 outline-none transition focus:border-primary"
-              type="datetime-local"
-            />
-          </NFormItem>
-          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-            <NFormItem label="班次">
-              <NSelect v-model:value="scheduleForm.shift" :options="meta?.shiftOptions ?? []" />
-            </NFormItem>
-            <NFormItem label="提前提醒（分钟）">
-              <NInputNumber v-model:value="scheduleForm.reminderMinutes" :min="5" class="w-full" />
-            </NFormItem>
-          </div>
-          <NFormItem label="备注">
-            <NInput v-model:value="scheduleForm.note" placeholder="排班备注" type="textarea" />
-          </NFormItem>
-        </NForm>
-      </div>
-      <template #footer>
-        <div class="flex justify-end gap-3">
-          <NButton @click="scheduleVisible = false">取消</NButton>
-          <NButton :loading="scheduling" type="primary" @click="submitSchedule">保存排班</NButton>
-        </div>
-      </template>
-    </NModal>
+    <TaskModal v-model:show="showModal" :edit-data="editingTask" :meta="meta" @save="handleSaveTask" />
   </Page>
 </template>

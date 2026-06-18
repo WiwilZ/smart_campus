@@ -7,89 +7,52 @@ import { h, onMounted, reactive, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
-import { NButton, NCard, NDataTable, NInput, NModal, NSelect, NTag } from 'naive-ui';
+import { NButton, NCard, NDataTable, NDatePicker, NImage, NInput, NModal, NSelect, NTag } from 'naive-ui';
 
 import { getInspectionAlerts } from '#/api';
 
 const loading = ref(false);
 const rows = ref<InspectionAlert[]>([]);
-const current = ref<InspectionAlert | null>(null);
-const detailVisible = ref(false);
 const filters = reactive({
-  keyword: '',
-  level: null as null | string,
+  content: '',
+  location: '',
+  time: null as null | string,
 });
-
-const levelLabelMap: Record<InspectionAlert['level'], string> = {
-  high: '1级告警',
-  low: '提示',
-  medium: '2级告警',
-};
-const levelTypeMap: Record<InspectionAlert['level'], 'error' | 'success' | 'warning'> = {
-  high: 'error',
-  low: 'success',
-  medium: 'warning',
-};
-const levelOptions = [
-  { label: '1级告警', value: 'high' },
-  { label: '2级告警', value: 'medium' },
-  { label: '提示', value: 'low' },
-];
 
 const columns: DataTableColumns<InspectionAlert> = [
   {
-    key: 'title',
-    minWidth: 220,
-    title: '算法 - 检测项',
+    key: 'description',
+    minWidth: 180,
+    title: '描述',
   },
   {
-    key: 'level',
+    key: 'location',
+    minWidth: 120,
+    title: '地点',
+  },
+  {
+    key: 'image',
     minWidth: 160,
-    title: '告警等级 - 巡检值',
+    title: '图片',
     render: (row) =>
-      h(
-        NTag,
-        { bordered: false, type: levelTypeMap[row.level] },
-        { default: () => levelLabelMap[row.level] },
-      ),
+      row.image
+        ? h(NImage, { src: row.image, width: 100, height: 75, objectFit: 'cover', class: 'rounded-md' })
+        : '暂无图片',
   },
   {
-    key: 'createdAt',
+    key: 'time',
     minWidth: 160,
-    title: '告警时间',
-  },
-  {
-    key: 'content',
-    minWidth: 320,
-    title: '告警内容',
-  },
-  {
-    key: 'actions',
-    title: '详情',
-    width: 100,
-    render: (row) =>
-      h(
-        NButton,
-        {
-          size: 'small',
-          onClick: () => openDetail(row),
-        },
-        { default: () => '查看' },
-      ),
+    title: '时间',
   },
 ];
-
-function openDetail(row: InspectionAlert) {
-  current.value = row;
-  detailVisible.value = true;
-}
 
 async function loadData() {
   loading.value = true;
   try {
     const response = await getInspectionAlerts({
-      keyword: filters.keyword || undefined,
-      level: filters.level || undefined,
+      content: filters.content || undefined,
+      location: filters.location || undefined,
+      time: filters.time || undefined,
     });
     rows.value = response.items;
   } finally {
@@ -98,8 +61,9 @@ async function loadData() {
 }
 
 function resetFilters() {
-  filters.keyword = '';
-  filters.level = null;
+  filters.content = '';
+  filters.location = '';
+  filters.time = null;
   loadData();
 }
 
@@ -111,12 +75,15 @@ onMounted(() => {
 <template>
   <Page auto-content-height>
     <div class="space-y-4 p-1">
-      <NCard :bordered="false" class="shadow-sm" title="告警数据筛选">
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-          <NInput v-model:value="filters.keyword" clearable placeholder="搜索告警标题 / 内容" />
-          <NSelect v-model:value="filters.level" :options="levelOptions" clearable placeholder="请选择告警等级" />
-          <div class="flex gap-3 md:col-span-2">
-            <NButton type="primary" @click="loadData">搜索</NButton>
+      <NCard :bordered="false" class="shadow-sm">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-wrap gap-4">
+            <NInput v-model:value="filters.content" clearable placeholder="内容" style="width: 140px" />
+            <NInput v-model:value="filters.location" clearable placeholder="地点" style="width: 140px" />
+            <NDatePicker v-model:formatted-value="filters.time" value-format="yyyy-MM-dd" type="date" clearable placeholder="时间" style="width: 140px" />
+          </div>
+          <div class="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
+            <NButton type="primary" @click="loadData">查询</NButton>
             <NButton @click="resetFilters">重置</NButton>
           </div>
         </div>
@@ -133,17 +100,5 @@ onMounted(() => {
         />
       </NCard>
     </div>
-
-    <NModal v-model:show="detailVisible" preset="card" style="width: 560px" title="告警详情">
-      <div class="space-y-3 text-sm">
-        <div class="flex items-center gap-2">
-          <span class="text-slate-500">等级：</span>
-          <NTag v-if="current" :type="levelTypeMap[current.level]">{{ levelLabelMap[current.level] }}</NTag>
-        </div>
-        <div><span class="text-slate-500">标题：</span>{{ current?.title }}</div>
-        <div><span class="text-slate-500">时间：</span>{{ current?.createdAt }}</div>
-        <div class="rounded-lg bg-slate-50 p-3 text-slate-600">{{ current?.content }}</div>
-      </div>
-    </NModal>
   </Page>
 </template>

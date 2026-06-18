@@ -15,35 +15,29 @@ export interface InspectionOption {
 }
 
 export interface InspectionPoint {
-  area: string;
-  code: string;
-  description: string;
-  deviceName: string;
-  deviceType: string;
   id: string;
-  inspectorName: string;
-  lastInspectionTime: string;
   name: string;
-  riskLevel: 'high' | 'low' | 'medium';
-  status: 'normal' | 'offline' | 'warning';
+  coordinates: string;
+  description: string;
+  creatorName: string;
+  createTime: string;
+  modifierName: string;
+  modifyTime: string;
 }
 
 export interface InspectionTask {
-  checklist: string[];
-  description: string;
-  frequency: string;
   id: string;
-  inspectorId: string;
-  inspectorName: string;
-  lastExecutionTime: string;
-  plannedEnd: string;
-  plannedStart: string;
-  point?: InspectionPoint;
-  pointId: string;
-  pointName: string;
-  priority: 'high' | 'low' | 'medium';
-  status: 'completed' | 'in_progress' | 'paused' | 'pending' | 'scheduled';
-  title: string;
+  name: string;
+  point: string;
+  robot: string;
+  status: '待执行' | '执行中' | '执行终止' | '已完成';
+  startTime: string;
+  endTime: string;
+  description: string;
+  creatorName: string;
+  createTime: string;
+  modifierName: string;
+  modifyTime: string;
 }
 
 export interface InspectionRecord {
@@ -58,11 +52,11 @@ export interface InspectionRecord {
 }
 
 export interface InspectionAlert {
-  content: string;
-  createdAt: string;
   id: string;
-  level: 'high' | 'low' | 'medium';
-  title: string;
+  time: string;
+  location: string;
+  image: string;
+  description: string;
 }
 
 export interface InspectionDashboardData {
@@ -192,6 +186,7 @@ export interface InspectionMetaData {
   inspectors: InspectionInspector[];
   pointOptions: InspectionOption[];
   priorityOptions: InspectionOption[];
+  robotOptions: InspectionOption[];
   shiftOptions: InspectionOption[];
   statusOptions: InspectionOption[];
 }
@@ -207,11 +202,9 @@ export interface InspectionSchedulePayload {
 export interface InspectionTaskPayload {
   checklist: string[];
   description: string;
-  frequency: string;
-  inspectorId: string;
-  plannedEnd: string;
-  plannedStart: string;
-  pointId: string;
+  creatorId: string;
+  pointIds: string[];
+  robotId?: string;
   priority: 'high' | 'low' | 'medium';
   status: 'completed' | 'in_progress' | 'paused' | 'pending' | 'scheduled';
   title: string;
@@ -303,4 +296,24 @@ export async function scheduleInspectionTask(
     };
     task: InspectionTask;
   }>(`/inspection/tasks/${taskId}/schedule`, data);
+}
+
+export async function createInspectionPoint(data: Partial<InspectionPoint>) {
+  return requestClient.post<InspectionPoint>('/inspection/points', data);
+}
+export async function updateInspectionPoint(id: string, data: Partial<InspectionPoint>) {
+  return requestClient.put<InspectionPoint>(`/inspection/points/${id}`, data);
+}
+export async function deleteInspectionPoint(id: string) {
+  return requestClient.delete(`/inspection/points/${id}`);
+}
+
+export async function createInspectionTask(data: Partial<InspectionTask>) {
+  return requestClient.post<InspectionTask>('/inspection/tasks', data);
+}
+export async function updateInspectionTaskDetail(id: string, data: Partial<InspectionTask>) {
+  return requestClient.put<InspectionTask>(`/inspection/tasks/${id}`, data);
+}
+export async function deleteInspectionTask(id: string) {
+  return requestClient.delete(`/inspection/tasks/${id}`);
 }

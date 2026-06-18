@@ -101,18 +101,21 @@ onMounted(() => {
 <template>
   <Page auto-content-height>
     <div class="space-y-4 p-1">
-      <NCard :bordered="false" class="shadow-sm" title="巡检数据">
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-5">
-          <NInput v-model:value="filters.keyword" clearable placeholder="搜索任务 / 点位 / 巡检值" />
-          <NSelect v-model:value="filters.pointName" :options="pointOptions" clearable placeholder="请选择巡检点" />
-          <NSelect
-            v-model:value="filters.algorithm"
-            :options="algorithmOptions"
-            clearable
-            placeholder="请选择检测项"
-          />
-          <div class="flex gap-3 md:col-span-2">
-            <NButton type="primary" @click="loadData">搜索</NButton>
+      <NCard :bordered="false" class="shadow-sm">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-wrap gap-4">
+            <NInput v-model:value="filters.keyword" clearable placeholder="搜索任务/点位/值" style="width: 160px" />
+            <NSelect v-model:value="filters.pointName" :options="pointOptions" clearable placeholder="请选择巡检点" style="width: 140px" />
+            <NSelect
+              v-model:value="filters.algorithm"
+              :options="algorithmOptions"
+              clearable
+              placeholder="请选择检测项"
+              style="width: 140px"
+            />
+          </div>
+          <div class="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
+            <NButton type="primary" @click="loadData">查询</NButton>
             <NButton @click="resetFilters">重置</NButton>
           </div>
         </div>

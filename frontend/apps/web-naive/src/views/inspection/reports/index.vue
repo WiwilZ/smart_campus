@@ -14,7 +14,8 @@ import { getInspectionRealtimeData } from '#/api';
 const loading = ref(false);
 const rows = ref<InspectionRealtimeRow[]>([]);
 const filters = reactive({
-  keyword: '',
+  point: '',
+  metric: '',
   status: null as null | string,
 });
 
@@ -38,7 +39,7 @@ const columns: DataTableColumns<InspectionRealtimeRow> = [
   {
     key: 'pointName',
     minWidth: 220,
-    title: '巡检点',
+    title: '点位',
   },
   {
     key: 'metric',
@@ -72,7 +73,8 @@ async function loadData() {
   loading.value = true;
   try {
     const response = await getInspectionRealtimeData({
-      keyword: filters.keyword || undefined,
+      point: filters.point || undefined,
+      metric: filters.metric || undefined,
       status: filters.status || undefined,
     });
     rows.value = response.items;
@@ -82,7 +84,8 @@ async function loadData() {
 }
 
 function resetFilters() {
-  filters.keyword = '';
+  filters.point = '';
+  filters.metric = '';
   filters.status = null;
   loadData();
 }
@@ -95,31 +98,17 @@ onMounted(() => {
 <template>
   <Page auto-content-height>
     <div class="space-y-4 p-1">
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <NCard :bordered="false" class="shadow-sm">
-          <div class="text-sm text-slate-500">在线点位</div>
-          <div class="mt-3 text-3xl font-semibold text-slate-900">5</div>
-        </NCard>
-        <NCard :bordered="false" class="shadow-sm">
-          <div class="text-sm text-slate-500">预警指标</div>
-          <div class="mt-3 text-3xl font-semibold text-amber-500">2</div>
-        </NCard>
-        <NCard :bordered="false" class="shadow-sm">
-          <div class="text-sm text-slate-500">采集频率</div>
-          <div class="mt-3 text-3xl font-semibold text-slate-900">1 min</div>
-        </NCard>
-        <NCard :bordered="false" class="shadow-sm">
-          <div class="text-sm text-slate-500">数据来源</div>
-          <div class="mt-3 text-3xl font-semibold text-slate-900">Mock</div>
-        </NCard>
-      </div>
 
-      <NCard :bordered="false" class="shadow-sm" title="实时数据筛选">
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-          <NInput v-model:value="filters.keyword" clearable placeholder="搜索点位 / 指标 / 数值" />
-          <NSelect v-model:value="filters.status" :options="statusOptions" clearable placeholder="请选择状态" />
-          <div class="flex gap-3 md:col-span-2">
-            <NButton type="primary" @click="loadData">搜索</NButton>
+
+      <NCard :bordered="false" class="shadow-sm">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-wrap gap-4">
+            <NInput v-model:value="filters.point" clearable placeholder="点位" style="width: 140px" />
+            <NInput v-model:value="filters.metric" clearable placeholder="指标" style="width: 140px" />
+            <NSelect v-model:value="filters.status" :options="statusOptions" clearable placeholder="状态" style="width: 140px" />
+          </div>
+          <div class="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
+            <NButton type="primary" @click="loadData">查询</NButton>
             <NButton @click="resetFilters">重置</NButton>
           </div>
         </div>

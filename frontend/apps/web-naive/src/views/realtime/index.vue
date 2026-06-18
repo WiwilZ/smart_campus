@@ -36,13 +36,6 @@ function onRecordTracksChange(value: RecordableKey[]) {
   recordTracks.value = value;
 }
 
-function moveMockCamera(action: string) {
-  message.info(`云台${action}`);
-}
-
-function moveMockRobot(action: string) {
-  message.info(`机器人${action}`);
-}
 </script>
 
 <template>
@@ -90,41 +83,7 @@ function moveMockRobot(action: string) {
           @update:record-tracks="onRecordTracksChange"
         />
 
-        <NCard size="small" title="云台控制">
-          <div class="space-y-3">
-            <div class="grid grid-cols-3 gap-2">
-              <span></span>
-              <NButton @click="moveMockCamera('上移')">上</NButton>
-              <span></span>
-              <NButton @click="moveMockCamera('左移')">左</NButton>
-              <NButton @click="moveMockCamera('回中')">中</NButton>
-              <NButton @click="moveMockCamera('右移')">右</NButton>
-              <span></span>
-              <NButton @click="moveMockCamera('下移')">下</NButton>
-              <span></span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <NButton @click="moveMockCamera('放大')">放大</NButton>
-              <NButton @click="moveMockCamera('缩小')">缩小</NButton>
-            </div>
-          </div>
-        </NCard>
 
-        <NCard size="small" title="机器人运动控制">
-          <div class="space-y-3">
-            <div class="grid grid-cols-3 gap-2">
-              <span></span>
-              <NButton @click="moveMockRobot('前进')">前进</NButton>
-              <span></span>
-              <NButton @click="moveMockRobot('左转')">左转</NButton>
-              <NButton @click="moveMockRobot('停止')">停止</NButton>
-              <NButton @click="moveMockRobot('右转')">右转</NButton>
-              <span></span>
-              <NButton @click="moveMockRobot('后退')">后退</NButton>
-              <span></span>
-            </div>
-          </div>
-        </NCard>
       </aside>
 
       <RealtimeVideoWall :register-canvas="registerCanvas" :tiles="videoTiles" />

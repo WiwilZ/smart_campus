@@ -14,13 +14,18 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
-from api_auth import router as auth_router
-from api_inspection import router as inspection_router
-from api_system import router as system_router
-from api_vision import router as vision_router
-from vision_runtime import shutdown_worker_threads, start_worker_threads
-from vision_transport import close_all_peer_connections, init_realtime_primitives
+from app.api.endpoints.auth import router as auth_router
+from app.api.endpoints.points import router as points_router
+from app.api.endpoints.tasks import router as tasks_router
+from app.api.endpoints.alerts import router as alerts_router
+from app.api.endpoints.commands import router as commands_router
+from app.api.endpoints.dashboard import router as dashboard_router
+from app.api.endpoints.system import router as system_router
+from app.api.endpoints.vision import router as vision_router
+from app.vision.runtime import shutdown_worker_threads, start_worker_threads
+from app.vision.transport import close_all_peer_connections, init_realtime_primitives
 
 
 @asynccontextmanager
@@ -35,8 +40,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan, title="Vision Backend")
+app.mount("/images", StaticFiles(directory="static/images"), name="images")
 app.include_router(auth_router)
-app.include_router(inspection_router)
+app.include_router(points_router, prefix="/api/inspection")
+app.include_router(tasks_router, prefix="/api/inspection")
+app.include_router(alerts_router, prefix="/api/inspection")
+app.include_router(commands_router, prefix="/api/inspection")
+app.include_router(dashboard_router, prefix="/api/inspection")
 app.include_router(system_router)
 app.include_router(vision_router)
 
@@ -44,4 +54,4 @@ app.include_router(vision_router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

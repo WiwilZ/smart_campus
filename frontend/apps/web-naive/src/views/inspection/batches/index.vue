@@ -127,12 +127,14 @@ onMounted(() => {
 <template>
   <Page auto-content-height>
     <div class="space-y-4 p-1">
-      <NCard :bordered="false" class="shadow-sm" title="批次筛选">
-        <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-          <NInput v-model:value="filters.keyword" clearable placeholder="搜索批次 / 类型 / 路径" />
-          <NSelect v-model:value="filters.status" :options="statusOptions" clearable placeholder="请选择批次状态" />
-          <div class="flex gap-3 md:col-span-2">
-            <NButton type="primary" @click="loadData">搜索</NButton>
+      <NCard :bordered="false" class="shadow-sm">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex flex-wrap gap-4">
+            <NInput v-model:value="filters.keyword" clearable placeholder="搜索批次 / 类型 / 路径" style="width: 180px" />
+            <NSelect v-model:value="filters.status" :options="statusOptions" clearable placeholder="请选择批次状态" style="width: 140px" />
+          </div>
+          <div class="flex items-center gap-3 whitespace-nowrap flex-shrink-0">
+            <NButton type="primary" @click="loadData">查询</NButton>
             <NButton @click="resetFilters">重置</NButton>
           </div>
         </div>
