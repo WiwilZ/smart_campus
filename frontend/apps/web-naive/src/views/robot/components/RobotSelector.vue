@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { NCard, NButton, NSelect } from 'naive-ui';
-import { message } from '#/adapter/naive';
+import { NCard, NSelect } from 'naive-ui';
 
 const props = defineProps<{
   robot: string;
@@ -33,8 +32,6 @@ function handleRobotChange(value: string) {
         class="w-64"
         @update:value="handleRobotChange"
       />
-      <NButton type="primary" :disabled="!robot" @click="message.success('已连接到机器人')">连接</NButton>
-      <NButton :disabled="!robot" @click="message.info('断开连接')">断开</NButton>
     </div>
   </NCard>
 </template>

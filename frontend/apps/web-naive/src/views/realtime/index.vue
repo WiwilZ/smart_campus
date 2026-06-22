@@ -7,11 +7,15 @@ import { NButton, NCard, NTag } from 'naive-ui';
 
 import { message } from '#/adapter/naive';
 
+import { ref } from 'vue';
 import RealtimeRecordPanel from './components/realtime-record-panel.vue';
 import RealtimeVideoWall from './components/realtime-video-wall.vue';
+import RobotSelector from '../robot/components/RobotSelector.vue';
 import { useRealtimeMonitor } from './composables/use-realtime-monitor';
 
 defineOptions({ name: 'RealtimeMonitor' });
+
+const selectedRobot = ref<string>('Robot-1');
 
 const {
   connText,
@@ -42,6 +46,7 @@ function onRecordTracksChange(value: RecordableKey[]) {
   <Page auto-content-height>
     <div class="realtime-layout">
       <aside class="panel">
+        <RobotSelector v-model:robot="selectedRobot" />
         <NCard size="small" title="视频流">
           <div class="fixed-profile">
             <div>

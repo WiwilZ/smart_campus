@@ -7,7 +7,7 @@ import MotionControl from './components/MotionControl.vue';
 import MapControl from './components/MapControl.vue';
 import VideoViewer from './components/VideoViewer.vue';
 
-const selectedRobot = ref<string | null>(null);
+const selectedRobot = ref<string>('Robot-1');
 </script>
 
 <template>
