@@ -4,7 +4,7 @@
       "id": "alert-001",
       "time": "2026-06-12 12:35:20",
       "location": "学生宿舍",
-      "image": "http://127.0.0.1:8080/images/alert_fire_lane.jpg",
+      "image": "http://127.0.0.1:10000/images/alert_fire_lane.jpg",
       "description": "消防通道堵塞",
       "level": "high",
       "title": "消防通道堵塞"
@@ -13,7 +13,7 @@
       "id": "alert-002",
       "time": "2026-06-18 10:54:51",
       "location": "停车场",
-      "image": "http://127.0.0.1:8080/images/alert_parking.jpg",
+      "image": "http://127.0.0.1:10000/images/alert_parking.jpg",
       "description": "不规范停车",
       "level": "medium",
       "title": "不规范停车"
@@ -22,7 +22,7 @@
       "id": "alert-003",
       "time": "2026-06-12 11:35:53",
       "location": "听荷池",
-      "image": "http://127.0.0.1:8080/images/alert_railing.jpg",
+      "image": "http://127.0.0.1:10000/images/alert_railing.jpg",
       "description": "栏杆损坏",
       "level": "high",
       "title": "栏杆损坏"
@@ -31,7 +31,7 @@
       "id": "alert-004",
       "time": "2026-06-02 17:23:21",
       "location": "操场",
-      "image": "http://127.0.0.1:8080/images/alert_littering.jpg",
+      "image": "http://127.0.0.1:10000/images/alert_littering.jpg",
       "description": "乱丢垃圾",
       "level": "low",
       "title": "乱丢垃圾"

@@ -47,9 +47,22 @@ export default defineConfig(async () => {
       server: {
         https: await ensureDevCert(),
         proxy: {
+          '/api/vision': {
+            changeOrigin: true,
+            target: 'http://192.168.30.192:10001',
+            ws: true,
+          },
+          '/api/inspection/commands': {
+            changeOrigin: true,
+            target: 'http://192.168.30.192:10001',
+          },
+          '/api/robot-navigation': {
+            changeOrigin: true,
+            target: 'http://192.168.30.192:10001',
+          },
           '/api': {
             changeOrigin: true,
-            target: 'http://localhost:8080',
+            target: 'http://localhost:10000',
             ws: true,
           },
         },

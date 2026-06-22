@@ -12,7 +12,7 @@ import numpy as np
 from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = BASE_DIR / "recordings"
+OUTPUT_DIR = BASE_DIR.parent.parent / "recordings"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 DEPTH_SCALE_ALPHA = 0.03

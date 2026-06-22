@@ -25,7 +25,7 @@ router = APIRouter(prefix="/api")
 
 # 进程启动时生成一次，整个进程生命周期内保持不变。支持通过环境变量覆盖以便重启后沿用 token。
 _AUTH_SECRET: bytes = (
-    os.environ.get("VISION_AUTH_SECRET") or secrets.token_urlsafe(32)
+    os.environ.get("VISION_AUTH_SECRET") or "smart_campus_shared_secret_2026"
 ).encode()
 _TOKEN_TTL = 24 * 3600  # 24h
 _DEFAULT_AVATAR = "https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp"
